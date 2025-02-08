@@ -1,0 +1,11 @@
+Flask==3.1.0
+Flask-Caching==2.3.0
+Flask-RESTful==0.3.10
+Flask-SQLAlchemy==3.1.1
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+pytest==8.3.4
+pytest-cov==6.0.0
+pytest-cover==3.0.0
+pytest-coverage==0.0
+rfc3339-validator==0.1.4
