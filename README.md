@@ -9,7 +9,7 @@
 - SQLite 3
 - Flask
 
-Dependency installation:
+## Dependency installation
 
 To install the necessary depencies, run:
 
@@ -27,38 +27,38 @@ Alternatively, if using requirements.txt file:
 ## Setup Instructions
 
 ### **1. Clone the Repository**
-
-> git clone https://github.com/your-repo/hour-logger-api.git
-> cd hour-logger-api
-
+```
+git clone https://github.com/your-repo/hour-logger-api.git
+cd hour-logger-api
+```
 ### **2. Create a Virtual Environment**
-
-> python -m venv .venv
-
+```
+python -m venv .venv
+```
 On Windows:
-
-> .venv\Scripts\activate
-
+```
+.venv\Scripts\activate
+```
 On macOS/Linux:
-
-> source .venv/bin/activate
-
+```
+source .venv/bin/activate
+```
 ### **3. Install Dependencies**
-
-> pip install -r requirements.txt
-
+```
+pip install -r requirements.txt
+```
 ### **4. Generate and Populate the Database**
-
-> python create_db.py
-
+```
+python create_db.py
+```
 To verify database creation, run:
-
-> sqlite3 test.db
-
+```
+sqlite3 test.db
+```
 And list the tables with:
-
-> .tables
-
+```
+.tables
+```
 ## Project Structure
 ```
 📁 hour-logger-api/
