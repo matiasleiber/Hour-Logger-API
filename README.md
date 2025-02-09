@@ -19,7 +19,7 @@ Alternatively, if using requirements.txt file:
 
 ```pip install -r requirements.txt```
 
-##Database
+## Database
 
 - Database Used: SQLite3
 - Version: Default version included with Python 3.x
