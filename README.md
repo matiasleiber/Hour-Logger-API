@@ -51,11 +51,12 @@ pip install -r requirements.txt
 ```
 python create_db.py
 ```
-To verify database creation, run:
+## Verifying Database Creation
+After runnin create_db.py, verify the databse with:
 ```
 sqlite3 test.db
 ```
-And list the tables with:
+List the tables to ensure they have been created:
 ```
 .tables
 ```
