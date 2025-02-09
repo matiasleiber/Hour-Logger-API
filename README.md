@@ -52,7 +52,7 @@ And list the tables with:
 ```
 📁 hour-logger-api/
 ├── 📁 src/
-│ └── models.py         # ORM models and database population function
+│   └── models.py       # ORM models and database population function
 ├── create_db.py        # Script to create and populate the database
 ├── test.db             # Populated SQLite database file
 ├── requirements.txt    # Python dependencies
