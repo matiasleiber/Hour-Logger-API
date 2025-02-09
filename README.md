@@ -10,8 +10,15 @@
 - Flask
 
 Dependency installation:
+To install the necessary depencies, run:
+```pip install flask sqlalchemy```
+Alternatively, if using requirements.txt file:
+```pip install -r requirements.txt```
 
-> pip install flask sqlalchemy
+##Database
+
+- Database Used: SQLite3
+- Version: Default version included with Python 3.x
 
 ## Setup Instructions
 
