@@ -11,34 +11,34 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    username = db.Column(db.String, primary_key=True, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    username = db.Column(db.String(32), primary_key=True, unique=True, nullable=False)
+    password = db.Column(db.String(32), nullable=False)
     
     logs = db.relationship("Log", back_populates="user")
-    time_reports = db.relationship("TimeReport", back_populates="user")
+    time_reports = db.relationship("TimeReport", back_populates="user", passive_deletes=True)
 
 class Category(db.Model):
-    name = db.Column(db.String, primary_key=True, unique=True, nullable=False)
-    description = db.Column(db.String, nullable=True)
+    name = db.Column(db.String(32), primary_key=True, unique=True, nullable=False)
+    description = db.Column(db.String(128), nullable=True)
     
     activities = db.relationship("Activity", back_populates="category", passive_deletes=True)
 
 class Activity(db.Model):
-    name = db.Column(db.String, primary_key=True, nullable=False)
-    category_name = db.Column(db.String, db.ForeignKey("category.name", ondelete="CASCADE"), primary_key=True, nullable=False)
-    description = db.Column(db.String, nullable=True)
+    name = db.Column(db.String(32), primary_key=True, nullable=False)
+    category_name = db.Column(db.String(32), db.ForeignKey("category.name", ondelete="CASCADE"), primary_key=True, nullable=False)
+    description = db.Column(db.String(128), nullable=True)
     
     category = db.relationship("Category", back_populates="activities")
     logs = db.relationship("Log", back_populates="activity")
 
 class Log(db.Model):
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
-    user_id = db.Column(db.String, db.ForeignKey("user.username", ondelete="SET DEFAULT"), nullable=False, default="removed")
-    activity_name = db.Column(db.String, nullable=True)
-    activity_category = db.Column(db.String, nullable=True)
+    user_id = db.Column(db.String(32), db.ForeignKey("user.username", ondelete="SET NULL"), nullable=True)
+    activity_name = db.Column(db.String(32), nullable=True)
+    activity_category = db.Column(db.String(32), nullable=True)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
-    comments = db.Column(db.String, nullable=True)
+    comments = db.Column(db.String(128), nullable=True)
     __table_args__ = (
         ForeignKeyConstraint(
             ['activity_name', 'activity_category'],
@@ -52,7 +52,7 @@ class Log(db.Model):
 
 class TimeReport(db.Model):
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
-    user_id = db.Column(db.String, db.ForeignKey("user.username", ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(db.String(32), db.ForeignKey("user.username", ondelete="CASCADE"), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     
