@@ -10,9 +10,13 @@
 - Flask
 
 Dependency installation:
+
 To install the necessary depencies, run:
+
 ```pip install flask sqlalchemy```
+
 Alternatively, if using requirements.txt file:
+
 ```pip install -r requirements.txt```
 
 ##Database
