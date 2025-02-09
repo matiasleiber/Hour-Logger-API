@@ -15,7 +15,7 @@ To install the necessary depencies, run:
 
 ```pip install flask sqlalchemy```
 
-Alternatively, if using requirements.txt file:
+Alternatively, if using ```requirements.txt``` file:
 
 ```pip install -r requirements.txt```
 
@@ -52,7 +52,7 @@ pip install -r requirements.txt
 python create_db.py
 ```
 ## Verifying Database Creation
-After runnin create_db.py, verify the databse with:
+After runnin ```create_db.py```, verify the databse with:
 ```
 sqlite3 test.db
 ```
