@@ -48,6 +48,16 @@ And list the tables with:
 
 > .tables
 
+## Project Structure
+
+📁 hour-logger-api/
+├── 📁 src/
+│ └── models.py # ORM models and database population function
+├── create_db.py # Script to create and populate the database
+├── test.db # Populated SQLite database file
+├── requirements.txt # Python dependencies
+└── README.md # Setup instructions
+
 # Group information
 
 - Student 1. Matias Leiber mleiber21@student.oulu.fi
