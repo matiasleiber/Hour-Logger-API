@@ -17,30 +17,26 @@ Dependency installation:
 
 ### **1. Clone the Repository**
 
-git clone https://github.com/your-repo/hour-logger-api.git
-cd hour-logger-api
+> git clone https://github.com/your-repo/hour-logger-api.git
+> cd hour-logger-api
 
 ### **2. Create a Virtual Environment**
 
-python -m venv .venv
+> python -m venv .venv
 
 On Windows:
 
-.venv\Scripts\activate
+> .venv\Scripts\activate
 
 On macOS/Linux:
 
-source .venv/bin/activate
+> source .venv/bin/activate
 
 ### **3. Install Dependencies**
 
-pip install -r requirements.txt
+> pip install -r requirements.txt
 
-### **4.Generate and Populate the Database**
-
-python create_db.py
-
-To populate the database, open project folder on command line and run:
+### **4. Generate and Populate the Database**
 
 > python create_db.py
 
