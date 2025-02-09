@@ -24,11 +24,11 @@ cd hour-logger-api
 
 python -m venv .venv
 
-# On Windows:
+On Windows:
 
 .venv\Scripts\activate
 
-# On macOS/Linux:
+On macOS/Linux:
 
 source .venv/bin/activate
 
