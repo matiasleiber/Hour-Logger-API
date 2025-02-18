@@ -46,7 +46,7 @@ def update_user(username):
     data = request.json
     user.password = data.get("password", user.password)
     db.session.commit()
-    return jsonify({"message": "User updated"}), 200
+    return jsonify({"message": "User updated successfully"}), 200
 
 @user_bp.route("/<string:username>", methods=["DELETE"])
 def delete_user(username):
