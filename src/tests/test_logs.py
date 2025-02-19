@@ -39,6 +39,7 @@ def test_create_log_with_invalid_user(client):
         "end_time": "2024-02-10T09:00:00"
     })
     assert response.status_code == 404
+    assert response.json["error"] == "User does not exist"
 
 def test_get_logs_nonexistent_user(client):
     """ Test retrieving logs for a user that does not exist (should return 404) """

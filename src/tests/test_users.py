@@ -37,7 +37,8 @@ def test_create_user_missing_fields(client):
     """ Tests creating a user with missing fields (should fail) """
     response = client.post("/users/", json={"username": "test_user"})
     assert response.status_code == 400
-    assert "error" in response.json
+    assert "message" in response.json
+    assert "password" in response.json["message"]
 
 def test_get_non_existent_user(client):
     """ Tests fetching a user that does not exist (should fail) """
@@ -51,7 +52,7 @@ def test_update_user_password(client):
 
     response = client.put("/users/test_user", json={"password": "new_secure_pass"})
     assert response.status_code == 200
-    assert response.json["message"] == "User updated successfully"
+    assert response.json["message"] == "User password updated"
 
 def test_get_all_users(client):
     """ Test retrieving all users """

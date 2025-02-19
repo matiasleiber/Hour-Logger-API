@@ -46,7 +46,7 @@ def test_create_activity_missing_fields(client):
     """ Tests creating an activity with missing fields (should fail) """
     response = client.post("/activities/", json={"name": "Pilates"})
     assert response.status_code == 400
-    assert "error" in response.json
+    assert "message" in response.json
 
 def test_get_all_activities(client):
     """ Test retrieving all activities """

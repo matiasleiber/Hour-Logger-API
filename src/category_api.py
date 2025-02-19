@@ -1,63 +1,58 @@
-from flask import Blueprint, request, jsonify
+from flask_restful import Resource, reqparse
 from models import db, Category
 
-category_bp = Blueprint("category_bp", __name__)
+class CategoryListResource(Resource):
+    def get(self):
+        """Retrieve all categories."""
+        categories = Category.query.all()
+        return [{"name": cat.name, "description": cat.description} for cat in categories], 200
 
-@category_bp.route("/", methods=["GET"])
-def get_categories():
-    """Retrieve all categories."""
-    categories = Category.query.all()
-    return jsonify([
-        {"name": cat.name, "description": cat.description} for cat in categories
-    ]), 200
+    def post(self):
+        """Create a new category."""
+        parser = reqparse.RequestParser()
+        parser.add_argument("name", required=True, help="Category name is required")
+        parser.add_argument("description", required=False)
+        data = parser.parse_args()
 
-@category_bp.route("/<string:name>", methods=["GET"])
-def get_category(name):
-    """Retrieve a single category."""
-    category = Category.query.filter_by(name=name).first()
-    if not category:
-        return jsonify({"error": "Category not found"}), 404
-    return jsonify({
-        "name": category.name,
-        "description": category.description
-    }), 200
+        category = Category(name=data["name"], description=data["description"])
+        db.session.add(category)
 
-@category_bp.route("/", methods=["POST"])
-def create_category():
-    """Create a new category."""
-    data = request.json
-    if "name" not in data:
-        return jsonify({"error": "Missing category name"}), 400
+        try:
+            db.session.commit()
+            return {"message": "Category created successfully"}, 201
+        except:
+            db.session.rollback()
+            return {"error": "Category already exists"}, 409
 
-    category = Category(name=data["name"], description=data.get("description"))
-    db.session.add(category)
 
-    try:
+class CategoryResource(Resource):
+    def get(self, name):
+        """Retrieve a single category."""
+        category = Category.query.filter_by(name=name).first()
+        if not category:
+            return {"error": "Category not found"}, 404
+        return {"name": category.name, "description": category.description}, 200
+
+    def put(self, name):
+        """Update a category's description."""
+        category = Category.query.filter_by(name=name).first()
+        if not category:
+            return {"error": "Category not found"}, 404
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("description", required=False)
+        data = parser.parse_args()
+
+        category.description = data["description"] or category.description
         db.session.commit()
-        return jsonify({"message": "Category created successfully"}), 201
-    except:
-        db.session.rollback()
-        return jsonify({"error": "Category already exists"}), 409
+        return {"message": "Category updated"}, 200
 
-@category_bp.route("/<string:name>", methods=["PUT"])
-def update_category(name):
-    """Update a category's description."""
-    category = Category.query.filter_by(name=name).first()
-    if not category:
-        return jsonify({"error": "Category not found"}), 404
+    def delete(self, name):
+        """Delete a category."""
+        category = Category.query.filter_by(name=name).first()
+        if not category:
+            return {"error": "Category not found"}, 404
 
-    data = request.json
-    category.description = data.get("description", category.description)
-    db.session.commit()
-    return jsonify({"message": "Category updated"}), 200
-
-@category_bp.route("/<string:name>", methods=["DELETE"])
-def delete_category(name):
-    """Delete a category."""
-    category = Category.query.filter_by(name=name).first()
-    if not category:
-        return jsonify({"error": "Category not found"}), 404
-
-    db.session.delete(category)
-    db.session.commit()
-    return jsonify({"message": "Category deleted"}), 200
+        db.session.delete(category)
+        db.session.commit()
+        return {"message": "Category deleted"}, 200

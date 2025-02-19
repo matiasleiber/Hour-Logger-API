@@ -1,68 +1,63 @@
-from flask import Blueprint, request, jsonify
+from flask_restful import Resource, reqparse
 from models import db, Activity, Category
 
-activity_bp = Blueprint("activity_bp", __name__)
+class ActivityListResource(Resource):
+    def get(self):
+        """Retrieve all activities."""
+        activities = Activity.query.all()
+        return [{"name": act.name, "category": act.category_name, "description": act.description} for act in activities], 200
 
-@activity_bp.route("/", methods=["GET"])
-def get_activities():
-    """Retrieve all activities."""
-    activities = Activity.query.all()
-    return jsonify([
-        {"name": act.name, "category": act.category_name, "description": act.description} for act in activities
-    ]), 200
+    def post(self):
+        """Create a new activity."""
+        parser = reqparse.RequestParser()
+        parser.add_argument("name", required=True, help="Activity name is required")
+        parser.add_argument("category_name", required=True, help="Category name is required")
+        parser.add_argument("description", required=False)
+        data = parser.parse_args()
 
-@activity_bp.route("/<string:name>/<string:category>", methods=["GET"])
-def get_activity(name, category):
-    """Retrieve a single activity."""
-    activity = Activity.query.filter_by(name=name, category_name=category).first()
-    if not activity:
-        return jsonify({"error": "Activity not found"}), 404
-    return jsonify({
-        "name": activity.name,
-        "category": activity.category_name,
-        "description": activity.description
-    }), 200
+        category = Category.query.filter_by(name=data["category_name"]).first()
+        if not category:
+            return {"error": "Category does not exist"}, 404
 
-@activity_bp.route("/", methods=["POST"])
-def create_activity():
-    """Create a new activity."""
-    data = request.json
-    if not all(k in data for k in ["name", "category_name"]):
-        return jsonify({"error": "Missing required fields"}), 400
+        activity = Activity(name=data["name"], category_name=data["category_name"], description=data["description"])
+        db.session.add(activity)
 
-    category = Category.query.filter_by(name=data["category_name"]).first()
-    if not category:
-        return jsonify({"error": "Category does not exist"}), 404
+        try:
+            db.session.commit()
+            return {"message": "Activity created successfully"}, 201
+        except:
+            db.session.rollback()
+            return {"error": "Activity already exists"}, 409
 
-    activity = Activity(name=data["name"], category_name=data["category_name"], description=data.get("description"))
-    db.session.add(activity)
 
-    try:
+class ActivityResource(Resource):
+    def get(self, name, category):
+        """Retrieve a single activity."""
+        activity = Activity.query.filter_by(name=name, category_name=category).first()
+        if not activity:
+            return {"error": "Activity not found"}, 404
+        return {"name": activity.name, "category": activity.category_name, "description": activity.description}, 200
+
+    def put(self, name, category):
+        """Update an activity."""
+        activity = Activity.query.filter_by(name=name, category_name=category).first()
+        if not activity:
+            return {"error": "Activity not found"}, 404
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("description", required=False)
+        data = parser.parse_args()
+
+        activity.description = data["description"] or activity.description
         db.session.commit()
-        return jsonify({"message": "Activity created successfully"}), 201
-    except:
-        db.session.rollback()
-        return jsonify({"error": "Activity already exists"}), 409
+        return {"message": "Activity updated"}, 200
 
-@activity_bp.route("/<string:name>/<string:category>", methods=["PUT"])
-def update_activity(name, category):
-    """Update an activity."""
-    activity = Activity.query.filter_by(name=name, category_name=category).first()
-    if not activity:
-        return jsonify({"error": "Activity not found"}), 404
+    def delete(self, name, category):
+        """Delete an activity."""
+        activity = Activity.query.filter_by(name=name, category_name=category).first()
+        if not activity:
+            return {"error": "Activity not found"}, 404
 
-    data = request.json
-    activity.description = data.get("description", activity.description)
-    db.session.commit()
-    return jsonify({"message": "Activity updated"}), 200
-
-@activity_bp.route("/<string:name>/<string:category>", methods=["DELETE"])
-def delete_activity(name, category):
-    """Delete an activity."""
-    activity = Activity.query.filter_by(name=name, category_name=category).first()
-    if not activity:
-        return jsonify({"error": "Activity not found"}), 404
-
-    db.session.delete(activity)
-    db.session.commit()
-    return jsonify({"message": "Activity deleted"}), 200
+        db.session.delete(activity)
+        db.session.commit()
+        return {"message": "Activity deleted"}, 200

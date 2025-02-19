@@ -1,60 +1,56 @@
-from flask import Blueprint, request, jsonify
+from flask_restful import Resource, reqparse
 from models import db, User
 
-user_bp = Blueprint("user_bp", __name__)
+class UserListResource(Resource):
+    def get(self):
+        """Retrieve all users."""
+        users = User.query.all()
+        return [{"username": user.username} for user in users], 200
 
-@user_bp.route("/", methods=["GET"])
-def get_users():
-    """Retrieve all users."""
-    users = User.query.all()
-    return jsonify([
-        {"username": user.username, "password": user.password} for user in users
-    ]), 200
+    def post(self):
+        """Create a new user."""
+        parser = reqparse.RequestParser()
+        parser.add_argument("username", required=True, help="Username is required")
+        parser.add_argument("password", required=True, help="Password is required")
+        data = parser.parse_args()
 
-@user_bp.route("/<string:username>", methods=["GET"])
-def get_user(username):
-    """Retrieve a single user."""
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-    return jsonify({"username": user.username, "password": user.password}), 200
+        if User.query.filter_by(username=data["username"]).first():
+            return {"error": "User already exists"}, 409
 
-@user_bp.route("/", methods=["POST"])
-def create_user():
-    """Create a new user."""
-    data = request.json
-    if "username" not in data or "password" not in data:
-        return jsonify({"error": "Missing required fields"}), 400
-
-    user = User(username=data["username"], password=data["password"])
-    db.session.add(user)
-
-    try:
+        user = User(username=data["username"], password=data["password"])
+        db.session.add(user)
         db.session.commit()
-        return jsonify({"message": "User created successfully"}), 201
-    except:
-        db.session.rollback()
-        return jsonify({"error": "User already exists"}), 409
+        return {"message": "User created successfully"}, 201
 
-@user_bp.route("/<string:username>", methods=["PUT"])
-def update_user(username):
-    """Update a user's password."""
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
 
-    data = request.json
-    user.password = data.get("password", user.password)
-    db.session.commit()
-    return jsonify({"message": "User updated successfully"}), 200
+class UserResource(Resource):
+    def get(self, username):
+        """Retrieve a user by username."""
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return {"error": "User not found"}, 404
+        return {"username": user.username}, 200
 
-@user_bp.route("/<string:username>", methods=["DELETE"])
-def delete_user(username):
-    """Delete a user."""
-    user = User.query.filter_by(username=username).first()
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+    def put(self, username):
+        """Update a user's password."""
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return {"error": "User not found"}, 404
 
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({"message": "User deleted"}), 200
+        parser = reqparse.RequestParser()
+        parser.add_argument("password", required=True, help="New password is required")
+        data = parser.parse_args()
+
+        user.password = data["password"]
+        db.session.commit()
+        return {"message": "User password updated"}, 200
+
+    def delete(self, username):
+        """Delete a user."""
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return {"error": "User not found"}, 404
+
+        db.session.delete(user)
+        db.session.commit()
+        return {"message": "User deleted"}, 200
