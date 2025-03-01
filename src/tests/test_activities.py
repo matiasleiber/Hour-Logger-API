@@ -56,9 +56,22 @@ def test_get_all_activities(client):
     response = client.get("/activities/")
     assert response.status_code == 200
     assert len(response.json) >= 2
+    
+def test_get_activity_not_found(client):
+    """ Tests retrieving an activity that does not exist (should return 404) """
+    response = client.get("/activities/NonExistentActivity/UnknownCategory")
+    assert response.status_code == 404
+
 
 def test_update_nonexistent_activity(client):
     """ Test updating an activity that does not exist (should return 404) """
     response = client.put("/activities/UnknownActivity", json={"description": "Updated desc"})
     assert response.status_code == 404
     
+def test_update_activity_description(client):
+    """ Tests updating an activity's description """
+    client.post("/categories/", json={"name": "Exercise", "description": "Workout"})
+    client.post("/activities/", json={"name": "Swimming", "category_name": "Exercise"})
+    
+    response = client.put("/activities/Swimming/Exercise", json={"description": "Pool swimming"})
+    assert response.status_code == 200

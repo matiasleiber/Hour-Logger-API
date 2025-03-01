@@ -45,3 +45,23 @@ def test_get_logs_nonexistent_user(client):
     """ Test retrieving logs for a user that does not exist (should return 404) """
     response = client.get("/logs/nonexistent_user")
     assert response.status_code == 404
+
+def test_create_log_invalid_timestamps(client):
+    """ Tests creating a log with invalid timestamps (start >= end) """
+    client.post("/users/", json={"username": "test_user", "password": "1234"})
+    client.post("/activities/", json={"name": "Running", "category_name": "Exercise"})
+    
+    response = client.post("/logs/", json={
+        "user_id": "test_user",
+        "activity_name": "Running",
+        "start_time": "2024-02-10T10:00:00",
+        "end_time": "2024-02-10T09:00:00",
+        "comments": "Invalid times"
+    })
+    assert response.status_code == 400
+    
+def test_get_empty_logs(client):
+    """ Tests retrieving logs when none exist (should return an empty list) """
+    response = client.get("/logs/")
+    assert response.status_code == 200
+    assert response.json == []

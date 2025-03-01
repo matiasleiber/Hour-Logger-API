@@ -53,3 +53,11 @@ def test_update_nonexistent_category(client):
     """ Test updating a category that does not exist (should return 404) """
     response = client.put("/categories/UnknownCategory", json={"description": "Updated desc"})
     assert response.status_code == 404
+    
+
+def test_update_category_description(client):
+    """ Tests updating a category description """
+    client.post("/categories/", json={"name": "Music", "description": "Old description"})
+    
+    response = client.put("/categories/Music", json={"description": "New description"})
+    assert response.status_code == 200

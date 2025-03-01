@@ -39,7 +39,7 @@ def test_create_user_missing_fields(client):
     assert response.status_code == 400
     assert "message" in response.json
     assert "password" in response.json["message"]
-
+    
 def test_get_non_existent_user(client):
     """ Tests fetching a user that does not exist (should fail) """
     response = client.get("/users/nonexistent")
@@ -62,3 +62,20 @@ def test_get_all_users(client):
     response = client.get("/users/")
     assert response.status_code == 200
     assert len(response.json) >= 2
+
+def test_delete_user_with_logs(client):
+    """ Tests deleting a user with logs (logs should be set to NULL) """
+    client.post("/users/", json={"username": "test_user", "password": "1234"})
+    client.post("/activities/", json={"name": "Reading", "category_name": "Hobby"})
+    
+    response = client.post("/logs/", json={
+        "user_id": "test_user",
+        "activity_name": "Reading",
+        "start_time": "2024-02-10T12:00:00",
+        "end_time": "2024-02-10T14:00:00",
+        "comments": "Read a book"
+    })
+    assert response.status_code == 201
+    
+    delete_response = client.delete("/users/test_user")
+    assert delete_response.status_code == 200
