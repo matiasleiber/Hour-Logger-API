@@ -10,7 +10,7 @@ Discussed was the first homework project deliverable.\
 API description should be changed to better explain which actions can be done with the API.\
 The related work API description should be justified better.\
 Should discuss about hypermedia, links etc.\
-Otherwise project status looking good, meeting closed.\
+Otherwise project status looking good, meeting closed.
 
 ### Action points
 Rework the aforementioned issues in the wiki.
@@ -31,7 +31,7 @@ In the diagram, make more clear what the relations between tables are: one-to-on
 Should describe/modify why in the implementation of Log there is _table_args\
 Otherwise looking good.\
 Agreed to hold the next meeting in Zoom.\
-Meeting closed.\
+Meeting closed.
 
 ### Action points
 Rework the aforementioned issues in the wiki and implementation.
