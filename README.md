@@ -74,7 +74,7 @@ Press CTRL+C to quit
  * Debugger is active!
  * Debugger PIN: 123-456-789
  ```
-Now it is possible to access the API in your web browser with:
+Now it is possible to access the API in your web browser with:\
 ```http://127.0.0.1:5000/categories/```\
 This works with all implemented resources, e.g.: \
 ```http://127.0.0.1:5000/users/``` \
