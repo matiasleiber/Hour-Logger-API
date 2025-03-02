@@ -77,9 +77,9 @@ Press CTRL+C to quit
 Now it is possible to access the API in your web browser with:
 ```http://127.0.0.1:5000/categories/```\
 This works with all implemented resources, e.g.: \
-```http://127.0.0.1:5000/users/```
-```http://127.0.0.1:5000/logs/```
-```http://127.0.0.1:5000/activities/```
+```http://127.0.0.1:5000/users/``` \
+```http://127.0.0.1:5000/logs/```\
+```http://127.0.0.1:5000/activities/```\
 ```http://127.0.0.1:5000/reports/```
 
 
