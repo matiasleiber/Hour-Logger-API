@@ -82,6 +82,14 @@ This works with all implemented resources, e.g.: \
 ```http://127.0.0.1:5000/activities/```\
 ```http://127.0.0.1:5000/reports/```
 
+## Running the tests
+Now with the API running, open a new terminal and first run:\
+```coverage run -m pytest src/tests/```\
+This runs the tests, and now create the report by running:\
+```coverage report -m```\
+Now you are provided with a test report and coverage.
+
+
 
 ## Project Structure
 ```
