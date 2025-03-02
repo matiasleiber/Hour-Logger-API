@@ -60,6 +60,29 @@ List the tables to ensure they have been created:
 ```
 .tables
 ```
+## Running the API
+Run the API by locating to ```/Hour-Logger-Api/src/``` and in this destination running the command ```py app.py```
+
+The terminal should verify that the app is running by printing something like this:
+```
+* Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit   
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 123-456-789
+ ```
+Now it is possible to access the API in your web browser with:
+```http://127.0.0.1:5000/categories/```\
+This works with all implemented resources, e.g.: \
+```http://127.0.0.1:5000/users/```
+```http://127.0.0.1:5000/logs/```
+```http://127.0.0.1:5000/activities/```
+```http://127.0.0.1:5000/reports/```
+
+
 ## Project Structure
 ```
 📁 hour-logger-api/
