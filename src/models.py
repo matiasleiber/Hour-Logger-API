@@ -16,12 +16,42 @@ class User(db.Model):
     
     logs = db.relationship("Log", back_populates="user")
     time_reports = db.relationship("TimeReport", back_populates="user", passive_deletes=True)
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["username", "password"]
+        }
+        props = schema["properties"] = {}
+        props["username"] = {
+            "description": "Username",
+            "type": "string"
+        }
+        props["password"] = {
+            "description": "Password for the user",
+            "type": "string"
+        }
+        return schema
 
 class Category(db.Model):
     name = db.Column(db.String(32), primary_key=True, unique=True, nullable=False)
     description = db.Column(db.String(128), nullable=True)
     
     activities = db.relationship("Activity", back_populates="category", passive_deletes=True)
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "name of the category",
+            "type": "string"
+        }
+        return schema
 
 class Activity(db.Model):
     name = db.Column(db.String(32), primary_key=True, nullable=False)
@@ -30,6 +60,23 @@ class Activity(db.Model):
     
     category = db.relationship("Category", back_populates="activities")
     logs = db.relationship("Log", back_populates="activity")
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "Name of the activity",
+            "type": "string"
+        }
+        props["Description"] = {
+            "description": "Descriptive string for the activity, can be null",
+            "type": "string"
+        }
+        return schema
 
 class Log(db.Model):
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
@@ -49,6 +96,35 @@ class Log(db.Model):
     
     user = db.relationship("User", back_populates="logs")
     activity = db.relationship("Activity", back_populates="logs")
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["activity_category", "activity_name", "start_time", "end_time"]
+        }
+        props = schema["properties"] = {}
+        props["activity_category"] = {
+            "description": "Name of the category",
+            "type": "string"
+        }
+        props["activity_name"] = {
+            "description": "Name of the activity",
+            "type": "string"
+        }
+        props["start_time"] = {
+            "description": "Start time of the activity",
+            "type": "date-time"
+        }
+        props["end_time"] = {
+            "description": "End time of the activity",
+            "type": "date-time"
+        }
+        props["comments"] = {
+            "description": "Optional comments for the log",
+            "type": "string"
+        }
+        return schema
 
 class TimeReport(db.Model):
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
@@ -57,6 +133,23 @@ class TimeReport(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     
     user = db.relationship("User", back_populates="time_reports")
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["activity_category", "activity_name", "start_time", "end_time"]
+        }
+        props = schema["properties"] = {}
+        props["start_time"] = {
+            "description": "Start time of the activity",
+            "type": "date-time"
+        }
+        props["end_time"] = {
+            "description": "End time of the activity",
+            "type": "date-time"
+        }
+        return schema
     
 def populate_db():
     # Populate the database with sample data

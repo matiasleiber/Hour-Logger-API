@@ -1,0 +1,8 @@
+MASON = "application/vnd.mason+json"
+LINK_RELATIONS_URL = "/hourlogger/link-relations/"
+ERROR_PROFILE = "/profiles/error/"
+CATEGORY_PROFILE = "/profiles/category/"
+ACTIVITY_PROFILE = "/profiles/activity/"
+USER_PROFILE = "/profiles/user/"
+LOG_PROFILE  = "/profiles/log/"
+REPORT_PROFILE = "/profiles/report/"
