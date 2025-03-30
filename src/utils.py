@@ -161,7 +161,7 @@ class HourLoggerBuilder(MasonBuilder):
             method="POST",
             encoding="json",
             title="Add a new report for this user",
-            schema=Report.get_schema()
+            schema=TimeReport.get_schema()
         )
 
     def add_control_modify_category(self, name):

@@ -74,7 +74,7 @@ class ReportResource(Resource):
         body.add_control("self", url_for("logresource", rid=rid))
         body.add_control("profile", REPORT_PROFILE)
         body.add_control("collection", url_for("reportlistresource", username=report.user_id))
-        body.add_control("user", url_for("userresource", username=username))
+        body.add_control("user", url_for("userresource", username=report.user_id))
         body.add_control_delete_report(rid)
         
         body["id"] = report.rid,
