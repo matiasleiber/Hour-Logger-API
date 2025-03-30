@@ -1,0 +1,465 @@
+
+openapi: 3.0.0
+info:
+  title: HourLogger API
+  version: "1.0"
+  description: Everything needs to be tracked these days and hour logger API offers functionality that helps you track how you have used your precious   time. With hour logger API you can log and track your how you spend your days. For example after a day you just log what activities you have done and which times. The activities are categorized in different sections depending on the action for example, exercise, work, cleaning and etc. API's main responsibilities are logging those activities in to the database and getting the grouped information for the user that show how the hours have been spent. This kind of API could be part of larger social media platform for example where you can share or compare your hours spent with your friends or even strangers. The activities you log could also be used as data that specifies what posts or adds the user could be interested in.
+
+
+paths:
+  /categories/:
+    get:
+      summary: List all categories
+      responses:
+        '200':
+          description: A list of categories
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/MasonListCategory'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    post:
+      summary: Create a new category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Successfully created
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+          
+  /categories/{name}:
+    parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Update a category's description
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Category updated
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+    delete:
+      summary: Delete a category
+      responses:
+        '200':
+          description: Category deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /categories/{category}/activities/:
+    parameters:
+      - $ref: '#/components/parameters/CategoryParam'
+    get:
+      summary: List all activities in a category
+      responses:
+        '200':
+          description: A list of activities
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/MasonListActivity'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: Create a new activity in a category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activity'
+      responses:
+        '201':
+          description: Successfully created
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+          
+
+
+  /categories/{category}/activities/{name}:
+    parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Update an activity's description
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Activity updated
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
+    delete:
+      summary: Delete an activity
+      responses:
+        '200':
+          description: Activity deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/:
+    get:
+      summary: List all users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/MasonListUser'
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /users/{username}:
+    parameters:
+      - $ref: '#/components/parameters/UsernameParam'
+    get:
+      summary: Get a user
+      responses:
+        '200':
+          description: A user object
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Update a user's password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [password]
+              properties:
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Password updated
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a user
+      responses:
+        '200':
+          description: User deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{username}/logs/:
+    parameters:
+      - $ref: '#/components/parameters/UsernameParam'
+    get:
+      summary: Retrieve logs for a user
+      responses:
+        '200':
+          description: List of logs
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/MasonListLog'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: Create a log entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+      responses:
+        '201':
+          description: Log created
+        '400':
+          description: Invalid input
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /logs/{rid}:
+    parameters:
+      - $ref: '#/components/parameters/LogIdParam'
+    get:
+      summary: Retrieve a specific log
+      responses:
+        '200':
+          description: A log entry
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/Log'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a log
+      responses:
+        '200':
+          description: Log deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{username}/reports/:
+    parameters:
+      - $ref: '#/components/parameters/UsernameParam'
+    get:
+      summary: Retrieve reports for a user
+      responses:
+        '200':
+          description: List of reports
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/MasonListReport'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      summary: Create a time report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeReport'
+      responses:
+        '201':
+          description: Report created
+        '400':
+          description: Invalid input
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reports/{rid}:
+    parameters:
+      - $ref: '#/components/parameters/ReportIdParam'
+    get:
+      summary: Retrieve a report
+      responses:
+        '200':
+          description: A report entry
+          content:
+            application/vnd.mason+json:
+              schema:
+                $ref: '#/components/schemas/TimeReport'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete a report
+      responses:
+        '200':
+          description: Report deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  parameters:
+    UsernameParam:
+      name: username
+      in: path
+      required: true
+      schema:
+        type: string
+    CategoryParam:
+      name: category
+      in: path
+      required: true
+      schema:
+        type: string
+    LogIdParam:
+      name: rid
+      in: path
+      required: true
+      schema:
+        type: integer
+    ReportIdParam:
+      name: rid
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    NotFound:
+      description: Entity not found
+      content:
+        application/vnd.mason+json:
+          schema:
+            $ref: '#/components/schemas/MasonError'
+    UnsupportedMediaType:
+      description: Unsupported Media Type
+      content:
+        application/vnd.mason+json:
+          schema:
+            $ref: '#/components/schemas/MasonError'
+    Conflict:
+      description: Conflict - Resource already exists
+      content:
+        application/vnd.mason+json:
+          schema:
+            $ref: '#/components/schemas/MasonError'
+
+  schemas:
+    MasonError:
+      type: object
+      properties:
+        '@error':
+          type: object
+          properties:
+            '@message':
+              type: string
+            '@messages':
+              type: array
+              items:
+                type: string
+
+    Category:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    Activity:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    User:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    Log:
+      type: object
+      required: [activity_category, activity_name, start_time, end_time]
+      properties:
+        user_id:
+          type: string
+        activity_name:
+          type: string
+        activity_category:
+          type: string
+        start_time:
+          type: string
+        end_time:
+          type: string
+        comments:
+          type: string
+
+    TimeReport:
+      type: object
+      required: [start_time, end_time]
+      properties:
+        user_id:
+          type: string
+        start_time:
+          type: string
+        end_time:
+          type: string
+
+    MasonListCategory:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+
+    MasonListActivity:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+
+    MasonListUser:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    MasonListLog:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Log'
+
+    MasonListReport:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeReport'
