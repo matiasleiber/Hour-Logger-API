@@ -19,8 +19,7 @@ def client():
 
 def test_create_time_report(client):
     """ Tests creating a time report (valid case) """
-    response = client.post("/reports/", json={
-        "user_id": "test_user",
+    response = client.post("/users/test_user/reports/", json={
         "start_time": "2024-02-10T08:00:00",
         "end_time": "2024-02-10T16:00:00"
     })
@@ -28,25 +27,26 @@ def test_create_time_report(client):
 
 def test_create_report_for_invalid_user(client):
     """ Tests trying to create a report for a non-existent user (should fail) """
-    response = client.post("/reports/", json={"user_id": "non_existent", "start_time": "2024-02-10T08:00:00", "end_time": "2024-02-10T16:00:00"})
+    response = client.post("/users/non_existent/reports/", json={
+        "start_time": "2024-02-10T08:00:00",
+        "end_time": "2024-02-10T16:00:00"
+    })
     assert response.status_code == 404
-    
+
 def test_create_time_report_missing_fields(client):
     """ Tests creating a time report with missing fields """
-    response = client.post("/reports/", json={"user_id": "test_user"})
-    assert response.status_code == 400
-    
+    response = client.post("/users/test_user/reports/", json={})
+    assert response.status_code == 415
+
 def test_create_time_report_invalid_times(client):
     """ Tests creating a time report where start_time >= end_time (should fail) """
-    response = client.post("/reports/", json={
-        "user_id": "test_user",
+    response = client.post("/users/test_user/reports/", json={
         "start_time": "2024-02-10T18:00:00",
         "end_time": "2024-02-10T16:00:00"
     })
     assert response.status_code == 400
-    
+
 def test_get_nonexistent_time_report(client):
     """ Tests retrieving a time report that does not exist """
     response = client.get("/reports/999")
     assert response.status_code == 404
-    

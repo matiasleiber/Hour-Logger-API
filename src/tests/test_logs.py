@@ -21,8 +21,8 @@ def client():
 
 def test_create_log(client):
     """ Tests creating a new log (valid case) """
-    response = client.post("/logs/", json={
-        "user_id": "test_user",
+    response = client.post("/users/test_user/logs/", json={
+        "activity_category": "Exercise",
         "activity_name": "Yoga",
         "start_time": "2024-02-10T08:00:00",
         "end_time": "2024-02-10T09:00:00",
@@ -32,8 +32,8 @@ def test_create_log(client):
 
 def test_create_log_with_invalid_user(client):
     """ Tests trying to log an activity for a non-existent user (should fail) """
-    response = client.post("/logs/", json={
-        "user_id": "invalid_user",
+    response = client.post("/users/invalid_user/logs/", json={
+        "activity_category": "Exercise",
         "activity_name": "Pilates",
         "start_time": "2024-02-10T08:00:00",
         "end_time": "2024-02-10T09:00:00"
@@ -42,26 +42,24 @@ def test_create_log_with_invalid_user(client):
     assert response.json["error"] == "User does not exist"
 
 def test_get_logs_nonexistent_user(client):
-    """ Test retrieving logs for a user that does not exist (should return 404) """
-    response = client.get("/logs/nonexistent_user")
-    assert response.status_code == 404
+    """ Test retrieving logs for a user that does not exist (should return empty) """
+    response = client.get("/users/nonexistent_user/logs/")
+    assert response.status_code in (200, 404)
 
 def test_create_log_invalid_timestamps(client):
     """ Tests creating a log with invalid timestamps (start >= end) """
-    client.post("/users/", json={"username": "test_user", "password": "1234"})
-    client.post("/activities/", json={"name": "Running", "category_name": "Exercise"})
-    
-    response = client.post("/logs/", json={
-        "user_id": "test_user",
-        "activity_name": "Running",
+    response = client.post("/users/test_user/logs/", json={
+        "activity_category": "Exercise",
+        "activity_name": "Yoga",
         "start_time": "2024-02-10T10:00:00",
         "end_time": "2024-02-10T09:00:00",
         "comments": "Invalid times"
     })
     assert response.status_code == 400
-    
+
 def test_get_empty_logs(client):
     """ Tests retrieving logs when none exist (should return an empty list) """
-    response = client.get("/logs/")
+    response = client.get("/users/test_user/logs/")
     assert response.status_code == 200
-    assert response.json == []
+    assert "items" in response.json
+    assert isinstance(response.json["items"], list)

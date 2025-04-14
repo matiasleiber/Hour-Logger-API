@@ -40,8 +40,8 @@ Next meeting on Zoom.
 
 
 ## Meeting 3.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 18.3.2025**
+* **ASSISTANTS: Roope Karjalainen, Tuukka Rauhala, Ivan Sanchez Milara**
 
 ### Minutes
 *Summary of what was discussed during the meeting*
