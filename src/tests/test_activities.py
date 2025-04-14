@@ -81,3 +81,9 @@ def test_update_activity_missing_payload(client):
     client.post("/categories/Exercise/activities/", json={"name": "Stretching"})
     response = client.put("/categories/Exercise/activities/Stretching")
     assert response.status_code == 415
+    
+def test_update_activity_missing_description(client):
+    """ Test updating an activity with empty JSON (should return 415) """
+    client.post("/categories/Exercise/activities/", json={"name": "Dance"})
+    response = client.put("/categories/Exercise/activities/Dance", json={})
+    assert response.status_code == 415

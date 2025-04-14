@@ -79,3 +79,38 @@ def test_create_report_malformed_time(client):
         "end_time": "bad-format-2"
     })
     assert response.status_code == 400
+
+def test_get_all_reports_for_user(client):
+    """ Test retrieving all reports for a user, expecting a Mason response with items list """
+    # Create multiple reports
+    client.post("/users/test_user/reports/", json={
+        "start_time": "2024-04-10T08:00:00",
+        "end_time": "2024-04-10T12:00:00"
+    })
+    client.post("/users/test_user/reports/", json={
+        "start_time": "2024-04-11T09:00:00",
+        "end_time": "2024-04-11T17:00:00"
+    })
+
+    response = client.get("/users/test_user/reports/")
+    assert response.status_code == 200
+    assert "@controls" in response.json
+    assert "items" in response.json
+    assert isinstance(response.json["items"], list)
+    assert len(response.json["items"]) == 2
+
+def test_get_single_report(client):
+    """ Test retrieving a specific time report with full Mason structure """
+    client.post("/users/test_user/reports/", json={
+        "start_time": "2024-04-10T09:00:00",
+        "end_time": "2024-04-10T10:00:00"
+    })
+    with app.app_context():
+        rid = TimeReport.query.first().rid
+
+    response = client.get(f"/reports/{rid}")
+    assert response.status_code == 200
+    assert "@controls" in response.json
+    assert response.json["user_id"] == ["test_user"]
+    assert "start_time" in response.json
+    assert "end_time" in response.json

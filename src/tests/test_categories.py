@@ -73,3 +73,15 @@ def test_update_category_missing_payload(client):
     client.post("/categories/", json={"name": "Books", "description": "Reading"})
     response = client.put("/categories/Books")
     assert response.status_code == 415
+    
+def test_update_category_missing_json(client):
+    """ Test updating a category with no JSON body (should return 415) """
+    client.post("/categories/", json={"name": "Focus", "description": "Deep work"})
+    response = client.put("/categories/Focus")
+    assert response.status_code == 415
+
+def test_update_category_missing_description(client):
+    """ Test updating a category with JSON but no 'description' (should return 415) """
+    client.post("/categories/", json={"name": "Focus", "description": "Deep work"})
+    response = client.put("/categories/Focus", json={})
+    assert response.status_code == 415
