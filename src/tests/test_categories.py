@@ -61,3 +61,15 @@ def test_update_category_description(client):
     
     response = client.put("/categories/Music", json={"description": "New description"})
     assert response.status_code == 200
+
+def test_delete_existing_category(client):
+    """ Test deleting an existing category """
+    client.post("/categories/", json={"name": "Temp"})
+    response = client.delete("/categories/Temp")
+    assert response.status_code == 200
+    
+def test_update_category_missing_payload(client):
+    """ Test updating a category with no payload (should return 415) """
+    client.post("/categories/", json={"name": "Books", "description": "Reading"})
+    response = client.put("/categories/Books")
+    assert response.status_code == 415

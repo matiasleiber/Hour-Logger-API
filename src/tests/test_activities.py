@@ -69,3 +69,15 @@ def test_update_activity_description(client):
     client.post("/categories/Exercise/activities/", json={"name": "Swimming"})
     response = client.put("/categories/Exercise/activities/Swimming", json={"description": "Pool swimming"})
     assert response.status_code == 200
+
+def test_delete_existing_activity(client):
+    """ Test deleting an existing activity """
+    client.post("/categories/Exercise/activities/", json={"name": "Jogging"})
+    response = client.delete("/categories/Exercise/activities/Jogging")
+    assert response.status_code == 200
+    
+def test_update_activity_missing_payload(client):
+    """ Test updating an activity with no payload (should return 415) """
+    client.post("/categories/Exercise/activities/", json={"name": "Stretching"})
+    response = client.put("/categories/Exercise/activities/Stretching")
+    assert response.status_code == 415

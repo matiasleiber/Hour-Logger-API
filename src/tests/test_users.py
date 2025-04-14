@@ -81,3 +81,13 @@ def test_delete_user_with_logs(client):
 
     delete_response = client.delete("/users/test_user")
     assert delete_response.status_code == 200
+
+def test_update_nonexistent_user(client):
+    """ Test updating a user that doesn't exist (should return 404) """
+    response = client.put("/users/ghost", json={"password": "irrelevant"})
+    assert response.status_code == 404
+    
+def test_create_user_invalid_content_type(client):
+    """ Test creating a user with no JSON payload (should return 415) """
+    response = client.post("/users/")
+    assert response.status_code == 415
