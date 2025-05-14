@@ -24,7 +24,7 @@ Rework the aforementioned issues in the wiki.
 
 ### Minutes
 Karjalainen at work\
-Discussed was the secong homework project deliverable.\
+Discussed was the second homework project deliverable.\
 Database table looking ok, but better clarification for TimeReport with Log and Activity needed.\
 Remove two Primary Keys from Activity.\
 In the diagram, make more clear what the relations between tables are: one-to-one, many-to-many, one-to-many.\
@@ -44,23 +44,39 @@ Next meeting on Zoom.
 * **ASSISTANTS: Roope Karjalainen, Tuukka Rauhala, Ivan Sanchez Milara**
 
 ### Minutes
-*Summary of what was discussed during the meeting*
+Matias unable to attend.\
+Discussed the third homework project deliverable.\
+The structure of activities is unclear, should consider modifying the structure so that reports and logs are added to activities.\
+Project structure is ok, but should move resources to their own folder.\
+No pylint, only code test coverage (93%).\
+No problems with the implementation regarding how it works.\
+Agreed to hold the next meeting in Zoom.\
+Meeting closed.
 
 ### Action points
-*List here the actions points discussed with assistants*
+Rework the aforementioned issues in both the wiki and the implementation of the project.
 
 
 
 
 ## Meeting 4.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 15.4.2025**
+* **ASSISTANTS: Roope Karjalainen, Tuukka Rauhala, Matias Leiber, Ivan Sanchez Milara**
 
 ### Minutes
-*Summary of what was discussed during the meeting*
+Everyone present for the meeting.\
+Discussed the fourth homework project deliverable.\
+Started by looking through the project wiki and documentation.\
+In response examples, some codes (200 vs 204) could be looken into.\
+Location header or body should be included in the POST response.\
+Some error responses are missing, (e.g, 400).\
+Hypermedia design looks fine.\
+Hypermedia implementation works.\
+Testing coverage 94%, a bit low in category, log_api and activity_api.\
+Meeting closed.
 
 ### Action points
-*List here the actions points discussed with assistants*
+Rework the aforementioned issues in both the wiki and the implementation of the project.
 
 
 
